@@ -16,9 +16,10 @@ namespace WeatherReciever
         static void Main(string[] args)
         {
             UdpClient udpServer = new UdpClient(9877);
+            string _recievedData;
 
-            //Creates an IPEndPoint to record the IP Address and port number of the sender.  
-            IPAddress ip = IPAddress.Parse("192.168.6.145");
+        //Creates an IPEndPoint to record the IP Address and port number of the sender.  
+        IPAddress ip = IPAddress.Parse("192.168.6.145");
             IPEndPoint RemoteIpEndPoint = new IPEndPoint(ip, 9877);
 
             try
@@ -31,13 +32,12 @@ namespace WeatherReciever
                     //Server is now activated");
 
                     string receivedData = Encoding.ASCII.GetString(receiveBytes);
-                   
-
+                    _recievedData = receivedData;
 
                     Console.WriteLine(receivedData);
                     //Console.WriteLine("Received from: " + clientName.ToString() + " " + text.ToString());
 
- 
+                
                   
                 }
             }
@@ -47,5 +47,10 @@ namespace WeatherReciever
             }
         
     }
+
+        public void ToDataBase(string temp)
+        {
+            
+        }
     }
 }
