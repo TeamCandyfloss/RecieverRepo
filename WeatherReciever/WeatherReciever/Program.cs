@@ -11,7 +11,6 @@ namespace WeatherReciever
     /// </summary>
     public class Program
     {
-        public int QQ = 0;
 
         public static void Main(string[] args)
         {
@@ -33,18 +32,14 @@ namespace WeatherReciever
                 {
                     var receiveBytes = udpServer.Receive(ref RemoteIpEndPoint);
                     //Server is now activated");
-
+                    Console.WriteLine("Recieved Data");
                     var receivedData = Encoding.ASCII.GetString(receiveBytes);
-
-                    Console.WriteLine(receivedData);
-                    //Console.WriteLine("Received from: " + clientName.ToString() + " " + text.ToString());
+                    Console.WriteLine("data processed");
+                    Console.WriteLine("Recorded temperature: "+receivedData);
 
                     pm.ToDataBase(receivedData);
 
-                    if (pm.QQ > 3)
-                    {
-                        break;
-                    }
+                
                 }
             }
             catch (Exception e)
@@ -53,10 +48,15 @@ namespace WeatherReciever
             }
         }
 
-        public void ToDataBase(string temp)
+        public int ToDataBase(string temp)
         {
             var time = DateTime.Now.ToShortTimeString();
             var place = "Roskilde";
+
+            if (place == null || time == null || temp == null)
+            {
+                throw new ArgumentException("Du kan ikke indsætte en Null værdi");
+            }
 
             var _connectionString = "Server=tcp:3semesterxxx.database.windows.net,1433;Initial Catalog=WCFSTUDENT;Persist Security Info=False;User ID=Admeme;Password=Skole123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
@@ -74,9 +74,9 @@ namespace WeatherReciever
 
                     connection.Open();
                     var result = command.ExecuteNonQuery();
-
-                    if (result < 0) Console.WriteLine("Error inserting data into the database.");
-                    QQ++;
+                    if (result < 0) throw new ArgumentException("Nothing has been added to the Database");
+                    return result;
+                    // tjekker for fejl i indsættelsen skriver hvis der er fejl
                 }
             }
         }
